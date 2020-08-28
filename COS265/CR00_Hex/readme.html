@@ -1,0 +1,180 @@
+<meta charset="utf-8" lang="en">
+
+                    **CR00_Hex**
+
+
+<!--
+
+General
+=======
+
+I have chosen three submissions for you to review.
+The `HexBoard.java` and `HexBoardStats.java` files from the submitted zip files were copied into a fresh project folder, so no personally identifiable information remains.
+
+Perform a code review on `HexBoard.java` and `HexBoardStats.java` for each of the sample solutions.
+Spend approximately 12--20 minutes on studying each submission.
+
+Keep in mind that these solutions are the work of your peers.
+Try to remain as objective and constructive as possible, as you could be reviewing the work of one of your teammates!
+
+If you recognize your own work, you are free to claim ownership, or you may remain silent on the ownership.
+That is up to you.
+
+For those that want to learn what other reviews found, I will post the results to the course LMS page.
+
+
+
+Submission
+----------
+
+Submit only the `readme.html` file.
+Only one person per group needs to make a submission.
+
+
+-->
+
+
+Reviewer Info
+=============
+
+<!-- fill out the following table with your information -->
+<!-- Note: wrapping table in div.noheader will hide the table's header -->
+<!-- Note: wrapping table in div.firstcol will style the first column different from other columns -->
+<div class="noheader firstcol">
+                  |             
+------------------|-------------
+reviewer 0        | Caleb Collier
+reviewer 1        | none
+reviewer 2        | none
+</div>
+
+
+
+
+
+
+
+Code Reviews
+============
+
+
+Subject0
+---------
+
+<!--
+How is the clarity of the code?
+Report on clarity of algorithm, comments, variable names, names of helper functions, etc.
+
+What is unique about this approach?
+What is clever about this approach?
+
+Notice any correctness bugs?
+Where, and what input will break the solution?
+
+Notice any efficiency bugs?
+Where, and what input will stress the solution?
+
+Any other comments?
+-->
+
+The variable names are defined well, everything defined makes sense. The user created an integer array for the virtual nodes.
+I didn't even think of using an int array for my virtual nodes, I just created a UF object of size N*N+4. They actually created 2 arrays, one for player 1 and one for player 2.
+One thing I didn't think of was creating a ValidateRowCol function for error handling. That makes things a lot easier for throwing exceptions.
+Subject 0 used a lot of 2D arrays, which I didn't use, I only used one 2D array for the logic board. The rest of the code was for the UF object.
+The efficiency seems to be alright, even though Subject 0 uses a for loop to iterate through the array they made to check connections.
+I think the thing that really caught me off guard was the use of arrays for virtual nodes and and connections board when all I had to do (if I remember correctly) was create a UF object.
+
+
+Subject1
+---------
+
+<!--
+How is the clarity of the code?
+Report on clarity of algorithm, comments, variable names, names of helper functions, etc.
+
+What is unique about this approach?
+What is clever about this approach?
+
+Notice any correctness bugs?
+Where, and what input will break the solution?
+
+Notice any efficiency bugs?
+Where, and what input will stress the solution?
+
+Any other comments?
+-->
+
+Subject 1 took an interesting approach by creating 4 connection objects. 2 of which were the connection board without virtual nodes, and 2 of which added a virtual node to it.
+I was originally going to have 2 connection boards as well, one for blue and one for red, but not 4. Subject 1 connected the virtual nodes inside the constructor, which I was also going to do.
+A couple of naming conventions that confused me were for the functions `flatten` and `expand`. The flatten function just returns the index of a given row and col.
+I'm not sure why it was named flatten. Subject 1's expand function wasn't even used in the code. I'm not entirely sure what purpose it was supposed to serve.
+I would imagine that there's a problem with the code's efficiency. The way Subject 1 connects their surrounding nodes is in a nested for loop.
+By iterating through the whole board, the efficiency should be N^2.
+
+
+
+Subject2
+---------
+
+<!--
+How is the clarity of the code?
+Report on clarity of algorithm, comments, variable names, names of helper functions, etc.
+
+What is unique about this approach?
+What is clever about this approach?
+
+Notice any correctness bugs?
+Where, and what input will break the solution?
+
+Notice any efficiency bugs?
+Where, and what input will stress the solution?
+
+Any other comments?
+-->
+
+Subject 2's approach is the closest to mine in some aspects. For some reason Subject 2 created a stack object, but never used it.
+I'm not sure how a stack would be useful to a data structure like this, or what it would even be used for. Everything else makes sense.
+Subject 2 created one union board and checked each surrounding tile in that union board by checking eveything surounding the selected node.
+That approach is the same one that I took to connect the nodes. Subject 2 also took the same approach I took for the virtual nodes.
+
+
+
+Reflection
+==========
+
+<!--
+What were some common features of the solutions you reviewed?
+
+How has seeing other solutions changed the way you view your submissions?
+
+List any other comments here.
+Feel free to provide any feedback on how much you learned from doing the review, and whether you enjoyed doing it.
+-->
+
+I have never done a code review before. It was very interesting to see how other people named their variables, and implemented the algorithm.
+I don't think seeing any other code has made me want to change my own. I know my own code, and I know that it is efficient (enough).
+I think Subject 0 really surprised me the most with the ammount of 2D arrays they used. When we first started this project, I was thinking about using multiple 2D arrays.
+After working through it a bit, however, I decided to just use 1 2D array which was necessary, the logic board. Overall it was very interesting to see how other people implemented their code.
+I'm assuming we're doing more code reviews in the future, and I'm pretty excited to do the next one. You don't realize just how different code can be even though you're solving the same problem.
+
+
+
+
+
+
+<!--   Feel free to modify the following to fit a theme of your choosing   -->
+<link href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap" rel="stylesheet"> <!-- a sans-serif font -->
+<style>  /* A TAYLOR-INSPIRED THEME */
+body {font-family:'Open Sans',sans-serif;}
+.md a:link, .md a:visited {color:hsl(252,23.0%,44.3%); font-family:'Open Sans',sans-serif;}
+.md table.table th {background-color:hsl(252,23.0%,44.3%);}
+.md .noheader th {display:none;}
+.md .firstcol td:first-child {white-space:pre;color:white;vertical-align:top;font-weight:bold;border-color:black;background:hsl(252,23.0%,54.3%);}
+.md .firstcol tr:nth-child(even) td:first-child {background:hsl(252,23.0%,44.3%);}
+</style>
+
+
+<!--   Leave the following Markdeep formatting code, as this will format your text above to look nice in a wed browser   -->
+<style class="fallback">body{visibility:hidden;white-space:pre;font-family:monospace}</style>
+<script src="https://casual-effects.com/markdeep/latest/markdeep.min.js"></script>
+<script>window.alreadyProcessedMarkdeep||(document.body.style.visibility="visible");</script>

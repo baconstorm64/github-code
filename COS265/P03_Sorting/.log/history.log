@@ -1,0 +1,1993 @@
+--[ 2019.10.07.10.08.46.851.0 ]--
+NewLogger: P03_Sorting
+Version: 1.3
+--[ 2019.10.07.10.08.46.854.0 ]--
+InitTree:
+/src/algs4.jar
+/src/stdlib.jar
+/src/Bubble.java
+/src/EdgeCases.java
+/src/MedianOfN.java
+/src/LinkedList.java
+/src/DoublingTest.java
+/src/QuickSortMedian.java
+/src/QuickSortMedian3.java
+/src/QuickSortMedian5.java
+/.idea/copyright/profiles_settings.xml
+/.idea/libraries/algs4.xml
+/.idea/libraries/stdlib.xml
+/.idea/vcs.xml
+/.idea/misc.xml
+/.idea/.gitignore
+/.idea/modules.xml
+/.idea/compiler.xml
+/.idea/workspace.xml
+/.idea/uiDesigner.xml
+/.cos265
+/readme.html
+/P03_Sorting.iml
+
+--[ 2019.10.07.10.08.46.854.1 ]--
+InitFile: /.cos265
+
+
+--[ 2019.10.07.10.08.46.854.2 ]--
+InitFile: /src/QuickSortMedian5.java
+/**
+ * The following code is *mostly* a copy of Quick class (quick sort) from algs4.jar
+ */
+
+public class QuickSortMedian5 extends QuickSortMedian {
+
+    public static class MedianOf5 extends MedianOfN {
+        public MedianOf5() {
+            // tell QuickSortMedian.MedianOfN we will find the median of 5 items
+            super(5);
+        }
+
+        /***********************************************************
+         * Determines which index in parameter indices points to
+         * the median value in parameter a
+         * @param a the array containing values
+         * @param indices the array containing indices into a
+         * @return the index of median value
+         ***********************************************************/
+        public int median(Comparable[] a, int[] indices) {
+            // get values at specified indices
+            int i0 = indices[0];
+            int i1 = indices[1];
+            int i2 = indices[2];
+            int i3 = indices[3];
+            int i4 = indices[4];
+            Comparable a0 = a[i0];
+            Comparable a1 = a[i1];
+            Comparable a2 = a[i2];
+            Comparable a3 = a[i3];
+            Comparable a4 = a[i4];
+
+            // find median in a0,a1,a2,a3,a4, and return respective index
+            // if a0 is median, return i0
+            // if a1 is median, return i1
+            // etc.
+
+            return i0;
+        }
+    }
+
+    /***********************************************************************
+     * Rearranges the array in ascending order, using the natural order.
+     * @param a the array to be sorted
+     ***********************************************************************/
+    public static void sort(Comparable[] a) {
+        MedianOf5 median = new MedianOf5();
+        QuickSortMedian.sort(a, median);
+    }
+
+
+    /***********************************************************************
+     *  main() function
+     *  Place all of your unit tests here
+     *  Hint: created additional functions to help organize your tests
+     ***********************************************************************/
+
+    public static void main(String[] args) {
+        Double[] a = {0.0};
+        QuickSortMedian5.sort(a);
+    }
+}
+
+--[ 2019.10.07.10.08.46.854.3 ]--
+InitFile: /src/QuickSortMedian.java
+/**
+ * The following code is *mostly* a copy of Quick class (quick sort) from algs4.jar
+ */
+
+public class QuickSortMedian {
+
+    /***********************************************************************
+     * Rearranges the array in ascending order, using the natural order.
+     * @param a the array to be sorted
+     ***********************************************************************/
+
+    public static void sort(Comparable[] a, MedianOfN median) {
+        sort(a, median, 0, a.length - 1);
+    }
+
+    // quicksort the subarray from a[lo] to a[hi]
+    private static void sort(Comparable[] a, MedianOfN median, int lo, int hi) {
+        if(hi <= lo) return;
+        int j = partition(a, median, lo, hi);   // partition data into parts, returning pivot index
+        sort(a, median, lo, j-1);   // recursively sort lower part
+        sort(a, median, j+1, hi);   // recursively sort higher part
+    }
+
+    // partition the subarray a[lo..hi] so that a[lo..j-1] <= a[j] <= a[j+1..hi]
+    // and return the index j.  note: v = a[j]
+    private static int partition(Comparable[] a, MedianOfN median, int lo, int hi) {
+        int i = lo;
+        int j = hi + 1;
+
+        int k = median.median(a, lo, hi);   // determine position of a pivot
+        exch(a, lo, k);                     // move pivot to lo position
+        Comparable v = a[lo];               // v is pivot value
+
+        while(true) {
+
+            // find item on lo to swap
+            while(less(a[++i], v))
+                if(i == hi) break;
+
+            // find item on hi to swap
+            while(less(v, a[--j]))
+                if(j == lo) break;      // redundant since a[lo] acts as sentinel
+
+            // check if pointers cross
+            if(i >= j) break;
+
+            exch(a, i, j);
+        }
+
+        // put partitioning item v at a[j]
+        exch(a, lo, j);
+
+        // now, a[lo .. j-1] <= a[j] <= a[j+1 .. hi]
+        return j;
+    }
+
+
+    /***********************************************************************
+     *  Helper sorting functions
+     ***********************************************************************/
+
+    // is v < w ?
+    private static boolean less(Comparable v, Comparable w) {
+        return (v.compareTo(w) < 0);
+    }
+
+    // exchange a[i] and a[j]
+    private static void exch(Object[] a, int i, int j) {
+        Object swap = a[i];
+        a[i] = a[j];
+        a[j] = swap;
+    }
+
+
+    /***********************************************************************
+     *  main() function
+     *  Place all of your unit tests here
+     *  Hint: created additional functions to help organize your tests
+     ***********************************************************************/
+
+    public static void main(String[] args) {
+
+    }
+}
+
+--[ 2019.10.07.10.08.46.855.0 ]--
+InitFile: /src/LinkedList.java
+import java.util.Iterator;
+
+public class LinkedList<Item extends Comparable<Item>> implements Iterable<Item> {
+    private Node first = null;
+    private int count = 0;
+
+    private class Node {
+        final Item item;    // cannot change item once it is set in constructor
+        Node next;          // can change next, though
+
+        public Node(Item i, Node n) {
+            item = i;
+            next = n;
+        }
+    }
+
+    public LinkedList() { }
+
+    public LinkedList(Item[] fromList) {
+        for(Item item : fromList) insert(item);
+    }
+
+    public void insert(Item item) {
+        first = new Node(item, first);
+        count++;
+    }
+
+    public Item remove() {
+        Item item = first.item;
+        first = first.next;
+        count--;
+        return item;
+    }
+
+    public boolean isEmpty() { return count == 0; }
+
+    public Iterator<Item> iterator() {
+        return new Iterator<Item>() {
+            Node current = first;
+
+            @Override
+            public boolean hasNext() {
+                return current != null;
+            }
+
+            @Override
+            public Item next() {
+                Item item = current.item;
+                current = current.next;
+                return item;
+            }
+        };
+    }
+
+    /***********************************************************************
+     * Rearranges the linked list in ascending order, using the natural order
+     * and mergesort.
+     ***********************************************************************/
+    
+    public void sort() {
+    }
+
+    /***********************************************************************
+     *  main() function
+     *  Place all of your unit tests here
+     *  Hint: created additional functions to help organize your tests
+     ***********************************************************************/
+
+    public static void main(String[] args) {
+        Double[] a = {0.0};
+        LinkedList<Double> linkedlist = new LinkedList<>(a);
+        linkedlist.sort();
+    }
+}
+
+--[ 2019.10.07.10.08.46.855.1 ]--
+InitFile: /src/EdgeCases.java
+public class EdgeCases {
+    /***********************************************************************
+     *  main() function
+     *  Place all of your unit tests here
+     *  Hint: created additional functions to help organize your tests
+     ***********************************************************************/
+
+    public static void main(String[] args) {
+        Double[] a = { 0.0 };
+
+        Bubble.sort(a);     // bubble sort
+        Selection.sort(a);  // selection sort
+        Insertion.sort(a);  // insertion sort
+        Shell.sort(a);      // Shellsort
+        Quick.sort(a);      // quicksort
+    }
+}
+
+--[ 2019.10.07.10.08.46.855.2 ]--
+InitFile: /src/DoublingTest.java
+public class DoublingTest {
+    /***********************************************************************
+     *  main() function
+     *  Place all of your unit tests here
+     *  Hint: created additional functions to help organize your tests
+     ***********************************************************************/
+
+    public static void main(String[] args) {
+        Double[] a = { 0.0 };
+
+        Selection.sort(a);  // selection sort
+        Insertion.sort(a);  // insertion sort
+        Shell.sort(a);      // Shellsort
+    }
+}
+
+--[ 2019.10.07.10.08.46.855.3 ]--
+InitFile: /src/Bubble.java
+public class Bubble {
+
+    public static void sort(Comparable[] a) {
+        boolean sorted = false;
+        while(!sorted) {
+            sorted = true;
+            for(int i = 0; i < a.length - 1; i++)
+                if(less(a[i + 1], a[i])) {
+                    sorted = false;
+                    exch(a, i, i + 1);
+                }
+        }
+    }
+
+    /***********************************************************************
+     *  Helper sorting functions
+     ***********************************************************************/
+
+    // is v < w ?
+    private static boolean less(Comparable v, Comparable w) {
+        return (v.compareTo(w) < 0);
+    }
+
+    // exchange a[i] and a[j]
+    private static void exch(Object[] a, int i, int j) {
+        Object swap = a[i];
+        a[i] = a[j];
+        a[j] = swap;
+    }
+
+    /***********************************************************************
+     *  main() function is used to experimentally verify bubble sort works
+     *  - generate a Double array
+     *  - fill array with random values
+     *  - sort
+     *  - assert that each value is smaller than or equal to next value
+     ***********************************************************************/
+
+    public static void main(String[] args) {
+        int N = 1000;
+        Double[] a = new Double[N];
+        for(int i = 0; i < N; i++) a[i] = StdRandom.uniform();
+        Bubble.sort(a);
+        for(int i = 0; i < N-1; i++) assert a[i] <= a[i+1];
+    }
+}
+
+--[ 2019.10.07.10.08.46.856.0 ]--
+InitFile: /src/MedianOfN.java
+public abstract class MedianOfN {
+    private int N;
+    private int[] indices;
+
+    public MedianOfN(int N) {
+        this.N = N;
+        indices = new int[N];
+    }
+
+    public abstract int median(Comparable[] a, int[] indices);
+
+    public int median(Comparable[] a, int lo, int hi) {
+        // if hi and lo are "close enough", simply return lo
+        if(hi - lo + 1 < N) return lo;
+        // choose N random indices in [lo, hi]
+        for(int i = 0; i < N; i++) indices[i] = StdRandom.uniform(lo, hi + 1);
+        return median(a, indices);
+    }
+}
+
+--[ 2019.10.07.10.08.46.856.1 ]--
+InitFile: /src/QuickSortMedian3.java
+/**
+ * The following code is *mostly* a copy of Quick class (quick sort) from algs4.jar
+ */
+
+public class QuickSortMedian3 extends QuickSortMedian {
+
+    public static class MedianOf3 extends MedianOfN {
+        public MedianOf3() {
+            // tell QuickSortMedian.MedianOfN we will find the median of 3 items
+            super(3);
+        }
+
+        /***********************************************************
+         * Determines which index in parameter indices points to
+         * the median value in parameter a
+         * @param a the array containing values
+         * @param indices the array containing indices into a
+         * @return the index of median value
+         ***********************************************************/
+        public int median(Comparable[] a, int[] indices) {
+            // get values at specified indices
+            int i0 = indices[0];
+            int i1 = indices[1];
+            int i2 = indices[2];
+            Comparable a0 = a[i0];
+            Comparable a1 = a[i1];
+            Comparable a2 = a[i2];
+
+            // find median in a0,a1,a2, and return respective index
+            // if a0 is median, return i0
+            // if a1 is median, return i1
+            // if a2 is median, return i2
+
+            return i0;
+        }
+    }
+
+
+    /***********************************************************************
+     * Rearranges the array in ascending order, using the natural order.
+     * @param a the array to be sorted
+     ***********************************************************************/
+    public static void sort(Comparable[] a) {
+        MedianOf3 median = new MedianOf3();
+        sort(a, median);
+    }
+
+    /***********************************************************************
+     *  main() function
+     *  Place all of your unit tests here
+     *  Hint: created additional functions to help organize your tests
+     ***********************************************************************/
+
+    public static void main(String[] args) {
+        Double[] a = {0.0};
+        QuickSortMedian3.sort(a);
+    }
+}
+
+--[ 2019.10.07.10.08.46.856.2 ]--
+InitFile: /P03_Sorting.iml
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="JAVA_MODULE" version="4">
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
+    <exclude-output />
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
+      <excludeFolder url="file://$MODULE_DIR$/.log" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="algs4" level="project" />
+    <orderEntry type="library" name="stdlib" level="project" />
+  </component>
+</module>
+
+--[ 2019.10.07.10.08.47.535.0 ]--
+UpdateTree (AD): 1 0
++ /.log/history.log
+
+--[ 2019.10.07.10.10.17.797.0 ]--
+DisposeComponent
+--[ 2019.10.15.10.00.32.805.0 ]--
+NewLogger: P03_Sorting
+Version: 1.3
+--[ 2019.10.15.10.00.33.004.0 ]--
+InitTree:
+/src/algs4.jar
+/src/stdlib.jar
+/src/Bubble.java
+/src/EdgeCases.java
+/src/MedianOfN.java
+/src/LinkedList.java
+/src/DoublingTest.java
+/src/QuickSortMedian.java
+/src/QuickSortMedian3.java
+/src/QuickSortMedian5.java
+/.log/history.log
+/.idea/copyright/profiles_settings.xml
+/.idea/libraries/algs4.xml
+/.idea/libraries/stdlib.xml
+/.idea/vcs.xml
+/.idea/misc.xml
+/.idea/.gitignore
+/.idea/modules.xml
+/.idea/compiler.xml
+/.idea/workspace.xml
+/.idea/uiDesigner.xml
+/.cos265
+/readme.html
+/P03_Sorting.iml
+
+--[ 2019.10.15.10.00.33.005.0 ]--
+InitFile: /.cos265
+
+
+--[ 2019.10.15.10.00.33.005.1 ]--
+InitFile: /src/QuickSortMedian5.java
+/**
+ * The following code is *mostly* a copy of Quick class (quick sort) from algs4.jar
+ */
+
+public class QuickSortMedian5 extends QuickSortMedian {
+
+    public static class MedianOf5 extends MedianOfN {
+        public MedianOf5() {
+            // tell QuickSortMedian.MedianOfN we will find the median of 5 items
+            super(5);
+        }
+
+        /***********************************************************
+         * Determines which index in parameter indices points to
+         * the median value in parameter a
+         * @param a the array containing values
+         * @param indices the array containing indices into a
+         * @return the index of median value
+         ***********************************************************/
+        public int median(Comparable[] a, int[] indices) {
+            // get values at specified indices
+            int i0 = indices[0];
+            int i1 = indices[1];
+            int i2 = indices[2];
+            int i3 = indices[3];
+            int i4 = indices[4];
+            Comparable a0 = a[i0];
+            Comparable a1 = a[i1];
+            Comparable a2 = a[i2];
+            Comparable a3 = a[i3];
+            Comparable a4 = a[i4];
+
+            // find median in a0,a1,a2,a3,a4, and return respective index
+            // if a0 is median, return i0
+            // if a1 is median, return i1
+            // etc.
+
+            return i0;
+        }
+    }
+
+    /***********************************************************************
+     * Rearranges the array in ascending order, using the natural order.
+     * @param a the array to be sorted
+     ***********************************************************************/
+    public static void sort(Comparable[] a) {
+        MedianOf5 median = new MedianOf5();
+        QuickSortMedian.sort(a, median);
+    }
+
+
+    /***********************************************************************
+     *  main() function
+     *  Place all of your unit tests here
+     *  Hint: created additional functions to help organize your tests
+     ***********************************************************************/
+
+    public static void main(String[] args) {
+        Double[] a = {0.0};
+        QuickSortMedian5.sort(a);
+    }
+}
+
+--[ 2019.10.15.10.00.33.005.2 ]--
+InitFile: /src/QuickSortMedian.java
+/**
+ * The following code is *mostly* a copy of Quick class (quick sort) from algs4.jar
+ */
+
+public class QuickSortMedian {
+
+    /***********************************************************************
+     * Rearranges the array in ascending order, using the natural order.
+     * @param a the array to be sorted
+     ***********************************************************************/
+
+    public static void sort(Comparable[] a, MedianOfN median) {
+        sort(a, median, 0, a.length - 1);
+    }
+
+    // quicksort the subarray from a[lo] to a[hi]
+    private static void sort(Comparable[] a, MedianOfN median, int lo, int hi) {
+        if(hi <= lo) return;
+        int j = partition(a, median, lo, hi);   // partition data into parts, returning pivot index
+        sort(a, median, lo, j-1);   // recursively sort lower part
+        sort(a, median, j+1, hi);   // recursively sort higher part
+    }
+
+    // partition the subarray a[lo..hi] so that a[lo..j-1] <= a[j] <= a[j+1..hi]
+    // and return the index j.  note: v = a[j]
+    private static int partition(Comparable[] a, MedianOfN median, int lo, int hi) {
+        int i = lo;
+        int j = hi + 1;
+
+        int k = median.median(a, lo, hi);   // determine position of a pivot
+        exch(a, lo, k);                     // move pivot to lo position
+        Comparable v = a[lo];               // v is pivot value
+
+        while(true) {
+
+            // find item on lo to swap
+            while(less(a[++i], v))
+                if(i == hi) break;
+
+            // find item on hi to swap
+            while(less(v, a[--j]))
+                if(j == lo) break;      // redundant since a[lo] acts as sentinel
+
+            // check if pointers cross
+            if(i >= j) break;
+
+            exch(a, i, j);
+        }
+
+        // put partitioning item v at a[j]
+        exch(a, lo, j);
+
+        // now, a[lo .. j-1] <= a[j] <= a[j+1 .. hi]
+        return j;
+    }
+
+
+    /***********************************************************************
+     *  Helper sorting functions
+     ***********************************************************************/
+
+    // is v < w ?
+    private static boolean less(Comparable v, Comparable w) {
+        return (v.compareTo(w) < 0);
+    }
+
+    // exchange a[i] and a[j]
+    private static void exch(Object[] a, int i, int j) {
+        Object swap = a[i];
+        a[i] = a[j];
+        a[j] = swap;
+    }
+
+
+    /***********************************************************************
+     *  main() function
+     *  Place all of your unit tests here
+     *  Hint: created additional functions to help organize your tests
+     ***********************************************************************/
+
+    public static void main(String[] args) {
+
+    }
+}
+
+--[ 2019.10.15.10.00.33.005.3 ]--
+InitFile: /src/LinkedList.java
+import java.util.Iterator;
+
+public class LinkedList<Item extends Comparable<Item>> implements Iterable<Item> {
+    private Node first = null;
+    private int count = 0;
+
+    private class Node {
+        final Item item;    // cannot change item once it is set in constructor
+        Node next;          // can change next, though
+
+        public Node(Item i, Node n) {
+            item = i;
+            next = n;
+        }
+    }
+
+    public LinkedList() { }
+
+    public LinkedList(Item[] fromList) {
+        for(Item item : fromList) insert(item);
+    }
+
+    public void insert(Item item) {
+        first = new Node(item, first);
+        count++;
+    }
+
+    public Item remove() {
+        Item item = first.item;
+        first = first.next;
+        count--;
+        return item;
+    }
+
+    public boolean isEmpty() { return count == 0; }
+
+    public Iterator<Item> iterator() {
+        return new Iterator<Item>() {
+            Node current = first;
+
+            @Override
+            public boolean hasNext() {
+                return current != null;
+            }
+
+            @Override
+            public Item next() {
+                Item item = current.item;
+                current = current.next;
+                return item;
+            }
+        };
+    }
+
+    /***********************************************************************
+     * Rearranges the linked list in ascending order, using the natural order
+     * and mergesort.
+     ***********************************************************************/
+    
+    public void sort() {
+    }
+
+    /***********************************************************************
+     *  main() function
+     *  Place all of your unit tests here
+     *  Hint: created additional functions to help organize your tests
+     ***********************************************************************/
+
+    public static void main(String[] args) {
+        Double[] a = {0.0};
+        LinkedList<Double> linkedlist = new LinkedList<>(a);
+        linkedlist.sort();
+    }
+}
+
+--[ 2019.10.15.10.00.33.005.4 ]--
+InitFile: /src/EdgeCases.java
+public class EdgeCases {
+    /***********************************************************************
+     *  main() function
+     *  Place all of your unit tests here
+     *  Hint: created additional functions to help organize your tests
+     ***********************************************************************/
+
+    public static void main(String[] args) {
+        Double[] a = { 0.0 };
+
+        Bubble.sort(a);     // bubble sort
+        Selection.sort(a);  // selection sort
+        Insertion.sort(a);  // insertion sort
+        Shell.sort(a);      // Shellsort
+        Quick.sort(a);      // quicksort
+    }
+}
+
+--[ 2019.10.15.10.00.33.006.0 ]--
+InitFile: /src/DoublingTest.java
+public class DoublingTest {
+    /***********************************************************************
+     *  main() function
+     *  Place all of your unit tests here
+     *  Hint: created additional functions to help organize your tests
+     ***********************************************************************/
+
+    public static void main(String[] args) {
+        Double[] a = { 0.0 };
+
+        Selection.sort(a);  // selection sort
+        Insertion.sort(a);  // insertion sort
+        Shell.sort(a);      // Shellsort
+    }
+}
+
+--[ 2019.10.15.10.00.33.006.1 ]--
+InitFile: /src/Bubble.java
+public class Bubble {
+
+    public static void sort(Comparable[] a) {
+        boolean sorted = false;
+        while(!sorted) {
+            sorted = true;
+            for(int i = 0; i < a.length - 1; i++)
+                if(less(a[i + 1], a[i])) {
+                    sorted = false;
+                    exch(a, i, i + 1);
+                }
+        }
+    }
+
+    /***********************************************************************
+     *  Helper sorting functions
+     ***********************************************************************/
+
+    // is v < w ?
+    private static boolean less(Comparable v, Comparable w) {
+        return (v.compareTo(w) < 0);
+    }
+
+    // exchange a[i] and a[j]
+    private static void exch(Object[] a, int i, int j) {
+        Object swap = a[i];
+        a[i] = a[j];
+        a[j] = swap;
+    }
+
+    /***********************************************************************
+     *  main() function is used to experimentally verify bubble sort works
+     *  - generate a Double array
+     *  - fill array with random values
+     *  - sort
+     *  - assert that each value is smaller than or equal to next value
+     ***********************************************************************/
+
+    public static void main(String[] args) {
+        int N = 1000;
+        Double[] a = new Double[N];
+        for(int i = 0; i < N; i++) a[i] = StdRandom.uniform();
+        Bubble.sort(a);
+        for(int i = 0; i < N-1; i++) assert a[i] <= a[i+1];
+    }
+}
+
+--[ 2019.10.15.10.00.33.006.2 ]--
+InitFile: /src/MedianOfN.java
+public abstract class MedianOfN {
+    private int N;
+    private int[] indices;
+
+    public MedianOfN(int N) {
+        this.N = N;
+        indices = new int[N];
+    }
+
+    public abstract int median(Comparable[] a, int[] indices);
+
+    public int median(Comparable[] a, int lo, int hi) {
+        // if hi and lo are "close enough", simply return lo
+        if(hi - lo + 1 < N) return lo;
+        // choose N random indices in [lo, hi]
+        for(int i = 0; i < N; i++) indices[i] = StdRandom.uniform(lo, hi + 1);
+        return median(a, indices);
+    }
+}
+
+--[ 2019.10.15.10.00.33.006.3 ]--
+InitFile: /src/QuickSortMedian3.java
+/**
+ * The following code is *mostly* a copy of Quick class (quick sort) from algs4.jar
+ */
+
+public class QuickSortMedian3 extends QuickSortMedian {
+
+    public static class MedianOf3 extends MedianOfN {
+        public MedianOf3() {
+            // tell QuickSortMedian.MedianOfN we will find the median of 3 items
+            super(3);
+        }
+
+        /***********************************************************
+         * Determines which index in parameter indices points to
+         * the median value in parameter a
+         * @param a the array containing values
+         * @param indices the array containing indices into a
+         * @return the index of median value
+         ***********************************************************/
+        public int median(Comparable[] a, int[] indices) {
+            // get values at specified indices
+            int i0 = indices[0];
+            int i1 = indices[1];
+            int i2 = indices[2];
+            Comparable a0 = a[i0];
+            Comparable a1 = a[i1];
+            Comparable a2 = a[i2];
+
+            // find median in a0,a1,a2, and return respective index
+            // if a0 is median, return i0
+            // if a1 is median, return i1
+            // if a2 is median, return i2
+
+            return i0;
+        }
+    }
+
+
+    /***********************************************************************
+     * Rearranges the array in ascending order, using the natural order.
+     * @param a the array to be sorted
+     ***********************************************************************/
+    public static void sort(Comparable[] a) {
+        MedianOf3 median = new MedianOf3();
+        sort(a, median);
+    }
+
+    /***********************************************************************
+     *  main() function
+     *  Place all of your unit tests here
+     *  Hint: created additional functions to help organize your tests
+     ***********************************************************************/
+
+    public static void main(String[] args) {
+        Double[] a = {0.0};
+        QuickSortMedian3.sort(a);
+    }
+}
+
+--[ 2019.10.15.10.00.33.006.4 ]--
+InitFile: /P03_Sorting.iml
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="JAVA_MODULE" version="4">
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
+    <exclude-output />
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
+      <excludeFolder url="file://$MODULE_DIR$/.log" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="algs4" level="project" />
+    <orderEntry type="library" name="stdlib" level="project" />
+  </component>
+</module>
+
+--[ 2019.10.15.10.15.31.985.0 ]--
+UpdateTree (AD): 14 0
++ /out/production/P03_Sorting/algs4.jar
++ /out/production/P03_Sorting/stdlib.jar
++ /out/production/P03_Sorting/Bubble.class
++ /out/production/P03_Sorting/EdgeCases.class
++ /out/production/P03_Sorting/MedianOfN.class
++ /out/production/P03_Sorting/LinkedList.class
++ /out/production/P03_Sorting/DoublingTest.class
++ /out/production/P03_Sorting/LinkedList$1.class
++ /out/production/P03_Sorting/LinkedList$Node.class
++ /out/production/P03_Sorting/QuickSortMedian.class
++ /out/production/P03_Sorting/QuickSortMedian3.class
++ /out/production/P03_Sorting/QuickSortMedian5.class
++ /out/production/P03_Sorting/QuickSortMedian3$MedianOf3.class
++ /out/production/P03_Sorting/QuickSortMedian5$MedianOf5.class
+
+--[ 2019.10.15.10.15.32.038.0 ]--
+CompilationStatus (AEW): 0 0 0
+--[ 2019.10.15.10.34.46.248.0 ]--
+:/src/DoublingTest.java
++ 8     
++ 9     
++ 10     
+--[ 2019.10.15.10.34.48.780.0 ]--
++ 8     
+--[ 2019.10.15.10.35.07.390.0 ]--
+r 8 
+r 10 
+r 11 
+--[ 2019.10.15.10.45.17.937.0 ]--
+r 9 
+--[ 2019.10.15.10.46.16.045.0 ]--
++ 19 
+--[ 2019.10.15.10.46.18.777.0 ]--
+- 19
+--[ 2019.10.15.10.51.49.770.0 ]--
+r 8     
+r 9     
+--[ 2019.10.15.10.51.51.472.0 ]--
++ 8     
+--[ 2019.10.15.10.51.57.014.0 ]--
+r 8 
+r 10 
+--[ 2019.10.15.10.53.38.923.0 ]--
+r 9     publi
+--[ 2019.10.15.10.53.38.947.0 ]--
+r 9     public
+--[ 2019.10.15.10.53.39.401.0 ]--
+r 9     public 
+--[ 2019.10.15.10.53.39.429.0 ]--
+r 9     public s
+--[ 2019.10.15.10.53.39.558.0 ]--
+r 9     public st
+--[ 2019.10.15.10.53.39.680.0 ]--
+r 9     public sta
+--[ 2019.10.15.10.53.39.895.0 ]--
+r 9     public stat
+--[ 2019.10.15.10.53.40.302.0 ]--
+r 9     public statd
+--[ 2019.10.15.10.53.40.382.0 ]--
+r 9     public stat
+--[ 2019.10.15.10.53.41.279.0 ]--
+r 9     public stati
+--[ 2019.10.15.10.53.41.525.0 ]--
+r 9     public static
+--[ 2019.10.15.10.53.41.747.0 ]--
+r 9     public static 
+--[ 2019.10.15.10.53.51.960.0 ]--
+r 9     public static v
+--[ 2019.10.15.10.53.52.302.0 ]--
+r 9     public static vp
+--[ 2019.10.15.10.53.52.329.0 ]--
+r 9     public static vpc
+--[ 2019.10.15.10.53.52.578.0 ]--
+r 9     public static vp
+--[ 2019.10.15.10.53.52.734.0 ]--
+r 9     public static v
+--[ 2019.10.15.10.53.53.060.0 ]--
+r 9     public static vo
+--[ 2019.10.15.10.53.53.109.0 ]--
+r 9     public static voi
+--[ 2019.10.15.10.53.53.210.0 ]--
+r 9     public static void
+--[ 2019.10.15.10.53.53.560.0 ]--
+r 9     public static void 
+--[ 2019.10.15.10.53.53.934.0 ]--
+r 9     public static void t
+--[ 2019.10.15.10.53.54.017.0 ]--
+r 9     public static void te
+--[ 2019.10.15.10.53.54.388.0 ]--
+r 9     public static void t
+--[ 2019.10.15.10.53.54.465.0 ]--
+r 9     public static void 
+--[ 2019.10.15.10.53.55.865.0 ]--
+r 9     public static void T
+--[ 2019.10.15.10.53.56.005.0 ]--
+r 9     public static void Te
+--[ 2019.10.15.10.53.56.547.0 ]--
+r 9     public static void Tes
+--[ 2019.10.15.10.53.57.523.0 ]--
+r 9     public static void Te
+--[ 2019.10.15.10.53.57.632.0 ]--
+r 9     public static void T
+--[ 2019.10.15.10.53.57.766.0 ]--
+r 9     public static void 
+--[ 2019.10.15.10.53.58.013.0 ]--
+r 9     public static void t
+--[ 2019.10.15.10.53.58.070.0 ]--
+r 9     public static void te
+--[ 2019.10.15.10.53.58.196.0 ]--
+r 9     public static void tes
+--[ 2019.10.15.10.53.58.406.0 ]--
+r 9     public static void test
+--[ 2019.10.15.10.53.58.429.0 ]--
+r 9     public static void teste
+--[ 2019.10.15.10.53.58.489.0 ]--
+r 9     public static void tester
+--[ 2019.10.15.10.53.59.401.0 ]--
+r 9     public static void tester()
+--[ 2019.10.15.10.54.22.787.0 ]--
+r 9     public static void tester(){}
+--[ 2019.10.15.10.54.23.336.0 ]--
++ 9     public static void tester(){
+r 10     }
+--[ 2019.10.15.10.54.23.357.0 ]--
++ 10         
+--[ 2019.10.15.10.54.24.345.0 ]--
+r 10          
+--[ 2019.10.15.10.54.24.403.0 ]--
+r 10         
+--[ 2019.10.15.10.54.25.512.0 ]--
++ 10         
+--[ 2019.10.15.10.55.09.930.0 ]--
+r 9     public static void tester() {
+--[ 2019.10.15.10.55.25.880.0 ]--
+r 10 
+r 11 
+--[ 2019.10.15.11.09.37.312.0 ]--
+- 7
+- 7
+- 7
+- 9
+--[ 2019.10.15.11.09.37.657.0 ]--
+r 9  
+--[ 2019.10.15.11.09.37.701.0 ]--
+- 7
+r 8     
+--[ 2019.10.15.11.09.37.881.0 ]--
+- 7
+--[ 2019.10.15.11.09.38.488.0 ]--
+- 7
+--[ 2019.10.15.14.38.52.887.0 ]--
+DisposeComponent
+--[ 2019.10.16.20.47.31.083.0 ]--
+NewLogger: P03_Sorting
+Version: 1.3
+--[ 2019.10.16.20.47.31.923.0 ]--
+InitTree:
+/out/production/P03_Sorting/algs4.jar
+/out/production/P03_Sorting/stdlib.jar
+/out/production/P03_Sorting/Bubble.class
+/out/production/P03_Sorting/EdgeCases.class
+/out/production/P03_Sorting/MedianOfN.class
+/out/production/P03_Sorting/LinkedList.class
+/out/production/P03_Sorting/DoublingTest.class
+/out/production/P03_Sorting/LinkedList$1.class
+/out/production/P03_Sorting/LinkedList$Node.class
+/out/production/P03_Sorting/QuickSortMedian.class
+/out/production/P03_Sorting/QuickSortMedian3.class
+/out/production/P03_Sorting/QuickSortMedian5.class
+/out/production/P03_Sorting/QuickSortMedian3$MedianOf3.class
+/out/production/P03_Sorting/QuickSortMedian5$MedianOf5.class
+/src/algs4.jar
+/src/stdlib.jar
+/src/Bubble.java
+/src/EdgeCases.java
+/src/MedianOfN.java
+/src/LinkedList.java
+/src/DoublingTest.java
+/src/QuickSortMedian.java
+/src/QuickSortMedian3.java
+/src/QuickSortMedian5.java
+/.log/history.log
+/.idea/copyright/profiles_settings.xml
+/.idea/libraries/algs4.xml
+/.idea/libraries/stdlib.xml
+/.idea/vcs.xml
+/.idea/misc.xml
+/.idea/.gitignore
+/.idea/modules.xml
+/.idea/compiler.xml
+/.idea/workspace.xml
+/.idea/uiDesigner.xml
+/.cos265
+/readme.html
+/P03_Sorting.iml
+
+--[ 2019.10.16.20.47.31.923.1 ]--
+InitFile: /.cos265
+
+
+--[ 2019.10.16.20.47.31.924.0 ]--
+InitFile: /src/QuickSortMedian5.java
+/**
+ * The following code is *mostly* a copy of Quick class (quick sort) from algs4.jar
+ */
+
+public class QuickSortMedian5 extends QuickSortMedian {
+
+    public static class MedianOf5 extends MedianOfN {
+        public MedianOf5() {
+            // tell QuickSortMedian.MedianOfN we will find the median of 5 items
+            super(5);
+        }
+
+        /***********************************************************
+         * Determines which index in parameter indices points to
+         * the median value in parameter a
+         * @param a the array containing values
+         * @param indices the array containing indices into a
+         * @return the index of median value
+         ***********************************************************/
+        public int median(Comparable[] a, int[] indices) {
+            // get values at specified indices
+            int i0 = indices[0];
+            int i1 = indices[1];
+            int i2 = indices[2];
+            int i3 = indices[3];
+            int i4 = indices[4];
+            Comparable a0 = a[i0];
+            Comparable a1 = a[i1];
+            Comparable a2 = a[i2];
+            Comparable a3 = a[i3];
+            Comparable a4 = a[i4];
+
+            // find median in a0,a1,a2,a3,a4, and return respective index
+            // if a0 is median, return i0
+            // if a1 is median, return i1
+            // etc.
+
+            return i0;
+        }
+    }
+
+    /***********************************************************************
+     * Rearranges the array in ascending order, using the natural order.
+     * @param a the array to be sorted
+     ***********************************************************************/
+    public static void sort(Comparable[] a) {
+        MedianOf5 median = new MedianOf5();
+        QuickSortMedian.sort(a, median);
+    }
+
+
+    /***********************************************************************
+     *  main() function
+     *  Place all of your unit tests here
+     *  Hint: created additional functions to help organize your tests
+     ***********************************************************************/
+
+    public static void main(String[] args) {
+        Double[] a = {0.0};
+        QuickSortMedian5.sort(a);
+    }
+}
+
+--[ 2019.10.16.20.47.31.924.1 ]--
+InitFile: /src/LinkedList.java
+import java.util.Iterator;
+
+public class LinkedList<Item extends Comparable<Item>> implements Iterable<Item> {
+    private Node first = null;
+    private int count = 0;
+
+    private class Node {
+        final Item item;    // cannot change item once it is set in constructor
+        Node next;          // can change next, though
+
+        public Node(Item i, Node n) {
+            item = i;
+            next = n;
+        }
+    }
+
+    public LinkedList() { }
+
+    public LinkedList(Item[] fromList) {
+        for(Item item : fromList) insert(item);
+    }
+
+    public void insert(Item item) {
+        first = new Node(item, first);
+        count++;
+    }
+
+    public Item remove() {
+        Item item = first.item;
+        first = first.next;
+        count--;
+        return item;
+    }
+
+    public boolean isEmpty() { return count == 0; }
+
+    public Iterator<Item> iterator() {
+        return new Iterator<Item>() {
+            Node current = first;
+
+            @Override
+            public boolean hasNext() {
+                return current != null;
+            }
+
+            @Override
+            public Item next() {
+                Item item = current.item;
+                current = current.next;
+                return item;
+            }
+        };
+    }
+
+    /***********************************************************************
+     * Rearranges the linked list in ascending order, using the natural order
+     * and mergesort.
+     ***********************************************************************/
+    
+    public void sort() {
+    }
+
+    /***********************************************************************
+     *  main() function
+     *  Place all of your unit tests here
+     *  Hint: created additional functions to help organize your tests
+     ***********************************************************************/
+
+    public static void main(String[] args) {
+        Double[] a = {0.0};
+        LinkedList<Double> linkedlist = new LinkedList<>(a);
+        linkedlist.sort();
+    }
+}
+
+--[ 2019.10.16.20.47.31.924.2 ]--
+InitFile: /src/MedianOfN.java
+public abstract class MedianOfN {
+    private int N;
+    private int[] indices;
+
+    public MedianOfN(int N) {
+        this.N = N;
+        indices = new int[N];
+    }
+
+    public abstract int median(Comparable[] a, int[] indices);
+
+    public int median(Comparable[] a, int lo, int hi) {
+        // if hi and lo are "close enough", simply return lo
+        if(hi - lo + 1 < N) return lo;
+        // choose N random indices in [lo, hi]
+        for(int i = 0; i < N; i++) indices[i] = StdRandom.uniform(lo, hi + 1);
+        return median(a, indices);
+    }
+}
+
+--[ 2019.10.16.20.47.31.925.0 ]--
+InitFile: /P03_Sorting.iml
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="JAVA_MODULE" version="4">
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
+    <exclude-output />
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
+      <excludeFolder url="file://$MODULE_DIR$/.log" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="algs4" level="project" />
+    <orderEntry type="library" name="stdlib" level="project" />
+  </component>
+</module>
+
+--[ 2019.10.16.20.47.31.925.1 ]--
+InitFile: /src/QuickSortMedian.java
+/**
+ * The following code is *mostly* a copy of Quick class (quick sort) from algs4.jar
+ */
+
+public class QuickSortMedian {
+
+    /***********************************************************************
+     * Rearranges the array in ascending order, using the natural order.
+     * @param a the array to be sorted
+     ***********************************************************************/
+
+    public static void sort(Comparable[] a, MedianOfN median) {
+        sort(a, median, 0, a.length - 1);
+    }
+
+    // quicksort the subarray from a[lo] to a[hi]
+    private static void sort(Comparable[] a, MedianOfN median, int lo, int hi) {
+        if(hi <= lo) return;
+        int j = partition(a, median, lo, hi);   // partition data into parts, returning pivot index
+        sort(a, median, lo, j-1);   // recursively sort lower part
+        sort(a, median, j+1, hi);   // recursively sort higher part
+    }
+
+    // partition the subarray a[lo..hi] so that a[lo..j-1] <= a[j] <= a[j+1..hi]
+    // and return the index j.  note: v = a[j]
+    private static int partition(Comparable[] a, MedianOfN median, int lo, int hi) {
+        int i = lo;
+        int j = hi + 1;
+
+        int k = median.median(a, lo, hi);   // determine position of a pivot
+        exch(a, lo, k);                     // move pivot to lo position
+        Comparable v = a[lo];               // v is pivot value
+
+        while(true) {
+
+            // find item on lo to swap
+            while(less(a[++i], v))
+                if(i == hi) break;
+
+            // find item on hi to swap
+            while(less(v, a[--j]))
+                if(j == lo) break;      // redundant since a[lo] acts as sentinel
+
+            // check if pointers cross
+            if(i >= j) break;
+
+            exch(a, i, j);
+        }
+
+        // put partitioning item v at a[j]
+        exch(a, lo, j);
+
+        // now, a[lo .. j-1] <= a[j] <= a[j+1 .. hi]
+        return j;
+    }
+
+
+    /***********************************************************************
+     *  Helper sorting functions
+     ***********************************************************************/
+
+    // is v < w ?
+    private static boolean less(Comparable v, Comparable w) {
+        return (v.compareTo(w) < 0);
+    }
+
+    // exchange a[i] and a[j]
+    private static void exch(Object[] a, int i, int j) {
+        Object swap = a[i];
+        a[i] = a[j];
+        a[j] = swap;
+    }
+
+
+    /***********************************************************************
+     *  main() function
+     *  Place all of your unit tests here
+     *  Hint: created additional functions to help organize your tests
+     ***********************************************************************/
+
+    public static void main(String[] args) {
+
+    }
+}
+
+--[ 2019.10.16.20.47.31.925.2 ]--
+InitFile: /src/EdgeCases.java
+public class EdgeCases {
+    /***********************************************************************
+     *  main() function
+     *  Place all of your unit tests here
+     *  Hint: created additional functions to help organize your tests
+     ***********************************************************************/
+
+    public static void main(String[] args) {
+        Double[] a = { 0.0 };
+
+        Bubble.sort(a);     // bubble sort
+        Selection.sort(a);  // selection sort
+        Insertion.sort(a);  // insertion sort
+        Shell.sort(a);      // Shellsort
+        Quick.sort(a);      // quicksort
+    }
+}
+
+--[ 2019.10.16.20.47.31.925.3 ]--
+InitFile: /src/DoublingTest.java
+public class DoublingTest {
+    /***********************************************************************
+     *  main() function
+     *  Place all of your unit tests here
+     *  Hint: created additional functions to help organize your tests
+     ***********************************************************************/
+
+
+    public static void main(String[] args) {
+        Double[] a = { 0.0 };
+
+        Selection.sort(a);  // selection sort
+        Insertion.sort(a);  // insertion sort
+        Shell.sort(a);      // Shellsort
+    }
+}
+
+--[ 2019.10.16.20.47.31.926.0 ]--
+InitFile: /src/Bubble.java
+public class Bubble {
+
+    public static void sort(Comparable[] a) {
+        boolean sorted = false;
+        while(!sorted) {
+            sorted = true;
+            for(int i = 0; i < a.length - 1; i++)
+                if(less(a[i + 1], a[i])) {
+                    sorted = false;
+                    exch(a, i, i + 1);
+                }
+        }
+    }
+
+    /***********************************************************************
+     *  Helper sorting functions
+     ***********************************************************************/
+
+    // is v < w ?
+    private static boolean less(Comparable v, Comparable w) {
+        return (v.compareTo(w) < 0);
+    }
+
+    // exchange a[i] and a[j]
+    private static void exch(Object[] a, int i, int j) {
+        Object swap = a[i];
+        a[i] = a[j];
+        a[j] = swap;
+    }
+
+    /***********************************************************************
+     *  main() function is used to experimentally verify bubble sort works
+     *  - generate a Double array
+     *  - fill array with random values
+     *  - sort
+     *  - assert that each value is smaller than or equal to next value
+     ***********************************************************************/
+
+    public static void main(String[] args) {
+        int N = 1000;
+        Double[] a = new Double[N];
+        for(int i = 0; i < N; i++) a[i] = StdRandom.uniform();
+        Bubble.sort(a);
+        for(int i = 0; i < N-1; i++) assert a[i] <= a[i+1];
+    }
+}
+
+--[ 2019.10.16.20.47.31.926.1 ]--
+InitFile: /src/QuickSortMedian3.java
+/**
+ * The following code is *mostly* a copy of Quick class (quick sort) from algs4.jar
+ */
+
+public class QuickSortMedian3 extends QuickSortMedian {
+
+    public static class MedianOf3 extends MedianOfN {
+        public MedianOf3() {
+            // tell QuickSortMedian.MedianOfN we will find the median of 3 items
+            super(3);
+        }
+
+        /***********************************************************
+         * Determines which index in parameter indices points to
+         * the median value in parameter a
+         * @param a the array containing values
+         * @param indices the array containing indices into a
+         * @return the index of median value
+         ***********************************************************/
+        public int median(Comparable[] a, int[] indices) {
+            // get values at specified indices
+            int i0 = indices[0];
+            int i1 = indices[1];
+            int i2 = indices[2];
+            Comparable a0 = a[i0];
+            Comparable a1 = a[i1];
+            Comparable a2 = a[i2];
+
+            // find median in a0,a1,a2, and return respective index
+            // if a0 is median, return i0
+            // if a1 is median, return i1
+            // if a2 is median, return i2
+
+            return i0;
+        }
+    }
+
+
+    /***********************************************************************
+     * Rearranges the array in ascending order, using the natural order.
+     * @param a the array to be sorted
+     ***********************************************************************/
+    public static void sort(Comparable[] a) {
+        MedianOf3 median = new MedianOf3();
+        sort(a, median);
+    }
+
+    /***********************************************************************
+     *  main() function
+     *  Place all of your unit tests here
+     *  Hint: created additional functions to help organize your tests
+     ***********************************************************************/
+
+    public static void main(String[] args) {
+        Double[] a = {0.0};
+        QuickSortMedian3.sort(a);
+    }
+}
+
+--[ 2019.10.16.20.47.51.546.0 ]--
+DisposeComponent
+--[ 2020.07.10.21.34.39.640.0 ]--
+NewLogger: P03_Sorting
+Version: 1.3
+--[ 2020.07.10.21.34.39.642.0 ]--
+InitTree:
+/out/production/P03_Sorting/algs4.jar
+/out/production/P03_Sorting/stdlib.jar
+/out/production/P03_Sorting/Bubble.class
+/out/production/P03_Sorting/EdgeCases.class
+/out/production/P03_Sorting/MedianOfN.class
+/out/production/P03_Sorting/LinkedList.class
+/out/production/P03_Sorting/DoublingTest.class
+/out/production/P03_Sorting/LinkedList$1.class
+/out/production/P03_Sorting/LinkedList$Node.class
+/out/production/P03_Sorting/QuickSortMedian.class
+/out/production/P03_Sorting/QuickSortMedian3.class
+/out/production/P03_Sorting/QuickSortMedian5.class
+/out/production/P03_Sorting/QuickSortMedian3$MedianOf3.class
+/out/production/P03_Sorting/QuickSortMedian5$MedianOf5.class
+/src/algs4.jar
+/src/stdlib.jar
+/src/Bubble.java
+/src/EdgeCases.java
+/src/MedianOfN.java
+/src/LinkedList.java
+/src/DoublingTest.java
+/src/QuickSortMedian.java
+/src/QuickSortMedian3.java
+/src/QuickSortMedian5.java
+/.log/history.log
+/.idea/copyright/profiles_settings.xml
+/.idea/libraries/algs4.xml
+/.idea/libraries/stdlib.xml
+/.idea/vcs.xml
+/.idea/misc.xml
+/.idea/.gitignore
+/.idea/modules.xml
+/.idea/compiler.xml
+/.idea/workspace.xml
+/.idea/uiDesigner.xml
+/.cos265
+/readme.html
+/P03_Sorting.iml
+
+--[ 2020.07.10.21.34.39.643.0 ]--
+InitFile: /.cos265
+
+
+--[ 2020.07.10.21.34.39.644.0 ]--
+InitFile: /src/QuickSortMedian5.java
+/**
+ * The following code is *mostly* a copy of Quick class (quick sort) from algs4.jar
+ */
+
+public class QuickSortMedian5 extends QuickSortMedian {
+
+    public static class MedianOf5 extends MedianOfN {
+        public MedianOf5() {
+            // tell QuickSortMedian.MedianOfN we will find the median of 5 items
+            super(5);
+        }
+
+        /***********************************************************
+         * Determines which index in parameter indices points to
+         * the median value in parameter a
+         * @param a the array containing values
+         * @param indices the array containing indices into a
+         * @return the index of median value
+         ***********************************************************/
+        public int median(Comparable[] a, int[] indices) {
+            // get values at specified indices
+            int i0 = indices[0];
+            int i1 = indices[1];
+            int i2 = indices[2];
+            int i3 = indices[3];
+            int i4 = indices[4];
+            Comparable a0 = a[i0];
+            Comparable a1 = a[i1];
+            Comparable a2 = a[i2];
+            Comparable a3 = a[i3];
+            Comparable a4 = a[i4];
+
+            // find median in a0,a1,a2,a3,a4, and return respective index
+            // if a0 is median, return i0
+            // if a1 is median, return i1
+            // etc.
+
+            return i0;
+        }
+    }
+
+    /***********************************************************************
+     * Rearranges the array in ascending order, using the natural order.
+     * @param a the array to be sorted
+     ***********************************************************************/
+    public static void sort(Comparable[] a) {
+        MedianOf5 median = new MedianOf5();
+        QuickSortMedian.sort(a, median);
+    }
+
+
+    /***********************************************************************
+     *  main() function
+     *  Place all of your unit tests here
+     *  Hint: created additional functions to help organize your tests
+     ***********************************************************************/
+
+    public static void main(String[] args) {
+        Double[] a = {0.0};
+        QuickSortMedian5.sort(a);
+    }
+}
+
+--[ 2020.07.10.21.34.39.648.0 ]--
+InitFile: /src/LinkedList.java
+import java.util.Iterator;
+
+public class LinkedList<Item extends Comparable<Item>> implements Iterable<Item> {
+    private Node first = null;
+    private int count = 0;
+
+    private class Node {
+        final Item item;    // cannot change item once it is set in constructor
+        Node next;          // can change next, though
+
+        public Node(Item i, Node n) {
+            item = i;
+            next = n;
+        }
+    }
+
+    public LinkedList() { }
+
+    public LinkedList(Item[] fromList) {
+        for(Item item : fromList) insert(item);
+    }
+
+    public void insert(Item item) {
+        first = new Node(item, first);
+        count++;
+    }
+
+    public Item remove() {
+        Item item = first.item;
+        first = first.next;
+        count--;
+        return item;
+    }
+
+    public boolean isEmpty() { return count == 0; }
+
+    public Iterator<Item> iterator() {
+        return new Iterator<Item>() {
+            Node current = first;
+
+            @Override
+            public boolean hasNext() {
+                return current != null;
+            }
+
+            @Override
+            public Item next() {
+                Item item = current.item;
+                current = current.next;
+                return item;
+            }
+        };
+    }
+
+    /***********************************************************************
+     * Rearranges the linked list in ascending order, using the natural order
+     * and mergesort.
+     ***********************************************************************/
+    
+    public void sort() {
+    }
+
+    /***********************************************************************
+     *  main() function
+     *  Place all of your unit tests here
+     *  Hint: created additional functions to help organize your tests
+     ***********************************************************************/
+
+    public static void main(String[] args) {
+        Double[] a = {0.0};
+        LinkedList<Double> linkedlist = new LinkedList<>(a);
+        linkedlist.sort();
+    }
+}
+
+--[ 2020.07.10.21.34.39.650.0 ]--
+InitFile: /src/MedianOfN.java
+public abstract class MedianOfN {
+    private int N;
+    private int[] indices;
+
+    public MedianOfN(int N) {
+        this.N = N;
+        indices = new int[N];
+    }
+
+    public abstract int median(Comparable[] a, int[] indices);
+
+    public int median(Comparable[] a, int lo, int hi) {
+        // if hi and lo are "close enough", simply return lo
+        if(hi - lo + 1 < N) return lo;
+        // choose N random indices in [lo, hi]
+        for(int i = 0; i < N; i++) indices[i] = StdRandom.uniform(lo, hi + 1);
+        return median(a, indices);
+    }
+}
+
+--[ 2020.07.10.21.34.39.651.0 ]--
+InitFile: /P03_Sorting.iml
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="JAVA_MODULE" version="4">
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
+    <exclude-output />
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
+      <excludeFolder url="file://$MODULE_DIR$/.log" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="algs4" level="project" />
+    <orderEntry type="library" name="stdlib" level="project" />
+  </component>
+</module>
+
+--[ 2020.07.10.21.34.39.652.0 ]--
+InitFile: /src/QuickSortMedian.java
+/**
+ * The following code is *mostly* a copy of Quick class (quick sort) from algs4.jar
+ */
+
+public class QuickSortMedian {
+
+    /***********************************************************************
+     * Rearranges the array in ascending order, using the natural order.
+     * @param a the array to be sorted
+     ***********************************************************************/
+
+    public static void sort(Comparable[] a, MedianOfN median) {
+        sort(a, median, 0, a.length - 1);
+    }
+
+    // quicksort the subarray from a[lo] to a[hi]
+    private static void sort(Comparable[] a, MedianOfN median, int lo, int hi) {
+        if(hi <= lo) return;
+        int j = partition(a, median, lo, hi);   // partition data into parts, returning pivot index
+        sort(a, median, lo, j-1);   // recursively sort lower part
+        sort(a, median, j+1, hi);   // recursively sort higher part
+    }
+
+    // partition the subarray a[lo..hi] so that a[lo..j-1] <= a[j] <= a[j+1..hi]
+    // and return the index j.  note: v = a[j]
+    private static int partition(Comparable[] a, MedianOfN median, int lo, int hi) {
+        int i = lo;
+        int j = hi + 1;
+
+        int k = median.median(a, lo, hi);   // determine position of a pivot
+        exch(a, lo, k);                     // move pivot to lo position
+        Comparable v = a[lo];               // v is pivot value
+
+        while(true) {
+
+            // find item on lo to swap
+            while(less(a[++i], v))
+                if(i == hi) break;
+
+            // find item on hi to swap
+            while(less(v, a[--j]))
+                if(j == lo) break;      // redundant since a[lo] acts as sentinel
+
+            // check if pointers cross
+            if(i >= j) break;
+
+            exch(a, i, j);
+        }
+
+        // put partitioning item v at a[j]
+        exch(a, lo, j);
+
+        // now, a[lo .. j-1] <= a[j] <= a[j+1 .. hi]
+        return j;
+    }
+
+
+    /***********************************************************************
+     *  Helper sorting functions
+     ***********************************************************************/
+
+    // is v < w ?
+    private static boolean less(Comparable v, Comparable w) {
+        return (v.compareTo(w) < 0);
+    }
+
+    // exchange a[i] and a[j]
+    private static void exch(Object[] a, int i, int j) {
+        Object swap = a[i];
+        a[i] = a[j];
+        a[j] = swap;
+    }
+
+
+    /***********************************************************************
+     *  main() function
+     *  Place all of your unit tests here
+     *  Hint: created additional functions to help organize your tests
+     ***********************************************************************/
+
+    public static void main(String[] args) {
+
+    }
+}
+
+--[ 2020.07.10.21.34.39.654.0 ]--
+InitFile: /src/EdgeCases.java
+public class EdgeCases {
+    /***********************************************************************
+     *  main() function
+     *  Place all of your unit tests here
+     *  Hint: created additional functions to help organize your tests
+     ***********************************************************************/
+
+    public static void main(String[] args) {
+        Double[] a = { 0.0 };
+
+        Bubble.sort(a);     // bubble sort
+        Selection.sort(a);  // selection sort
+        Insertion.sort(a);  // insertion sort
+        Shell.sort(a);      // Shellsort
+        Quick.sort(a);      // quicksort
+    }
+}
+
+--[ 2020.07.10.21.34.39.656.0 ]--
+InitFile: /src/DoublingTest.java
+public class DoublingTest {
+    /***********************************************************************
+     *  main() function
+     *  Place all of your unit tests here
+     *  Hint: created additional functions to help organize your tests
+     ***********************************************************************/
+
+
+    public static void main(String[] args) {
+        Double[] a = { 0.0 };
+
+        Selection.sort(a);  // selection sort
+        Insertion.sort(a);  // insertion sort
+        Shell.sort(a);      // Shellsort
+    }
+}
+
+--[ 2020.07.10.21.34.39.658.0 ]--
+InitFile: /src/Bubble.java
+public class Bubble {
+
+    public static void sort(Comparable[] a) {
+        boolean sorted = false;
+        while(!sorted) {
+            sorted = true;
+            for(int i = 0; i < a.length - 1; i++)
+                if(less(a[i + 1], a[i])) {
+                    sorted = false;
+                    exch(a, i, i + 1);
+                }
+        }
+    }
+
+    /***********************************************************************
+     *  Helper sorting functions
+     ***********************************************************************/
+
+    // is v < w ?
+    private static boolean less(Comparable v, Comparable w) {
+        return (v.compareTo(w) < 0);
+    }
+
+    // exchange a[i] and a[j]
+    private static void exch(Object[] a, int i, int j) {
+        Object swap = a[i];
+        a[i] = a[j];
+        a[j] = swap;
+    }
+
+    /***********************************************************************
+     *  main() function is used to experimentally verify bubble sort works
+     *  - generate a Double array
+     *  - fill array with random values
+     *  - sort
+     *  - assert that each value is smaller than or equal to next value
+     ***********************************************************************/
+
+    public static void main(String[] args) {
+        int N = 1000;
+        Double[] a = new Double[N];
+        for(int i = 0; i < N; i++) a[i] = StdRandom.uniform();
+        Bubble.sort(a);
+        for(int i = 0; i < N-1; i++) assert a[i] <= a[i+1];
+    }
+}
+
+--[ 2020.07.10.21.34.39.659.0 ]--
+InitFile: /src/QuickSortMedian3.java
+/**
+ * The following code is *mostly* a copy of Quick class (quick sort) from algs4.jar
+ */
+
+public class QuickSortMedian3 extends QuickSortMedian {
+
+    public static class MedianOf3 extends MedianOfN {
+        public MedianOf3() {
+            // tell QuickSortMedian.MedianOfN we will find the median of 3 items
+            super(3);
+        }
+
+        /***********************************************************
+         * Determines which index in parameter indices points to
+         * the median value in parameter a
+         * @param a the array containing values
+         * @param indices the array containing indices into a
+         * @return the index of median value
+         ***********************************************************/
+        public int median(Comparable[] a, int[] indices) {
+            // get values at specified indices
+            int i0 = indices[0];
+            int i1 = indices[1];
+            int i2 = indices[2];
+            Comparable a0 = a[i0];
+            Comparable a1 = a[i1];
+            Comparable a2 = a[i2];
+
+            // find median in a0,a1,a2, and return respective index
+            // if a0 is median, return i0
+            // if a1 is median, return i1
+            // if a2 is median, return i2
+
+            return i0;
+        }
+    }
+
+
+    /***********************************************************************
+     * Rearranges the array in ascending order, using the natural order.
+     * @param a the array to be sorted
+     ***********************************************************************/
+    public static void sort(Comparable[] a) {
+        MedianOf3 median = new MedianOf3();
+        sort(a, median);
+    }
+
+    /***********************************************************************
+     *  main() function
+     *  Place all of your unit tests here
+     *  Hint: created additional functions to help organize your tests
+     ***********************************************************************/
+
+    public static void main(String[] args) {
+        Double[] a = {0.0};
+        QuickSortMedian3.sort(a);
+    }
+}
+
+--[ 2020.07.10.21.34.50.170.0 ]--
+DisposeComponent
