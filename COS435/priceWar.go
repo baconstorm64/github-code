@@ -2,9 +2,16 @@ package main
 import "fmt"
 
 func main(){
+
+	//Added to allow pausing in between function calls
+	var continueString string
 	PeacePeace(3.20, 3.20, 5, 5)
+	fmt.Scanln(&continueString)
 	PeaceWar(3.20, 3.20, 5, 5, "B", "A")
+	fmt.Scanln(&continueString)
 	PeaceWar(3.20, 3.20, 5, 5, "A", "B")
+	fmt.Scanln(&continueString)
+	WarWar(3.20, 3.20, 5, 5)
 }
 
 
@@ -80,6 +87,13 @@ func PeaceWar(priceA float32, priceB float32, customersA float32, customersB flo
 	companyBProfit := float32(0)
 
 
+	/*
+	Depending on which company decides to do nothing
+	and which company decides to continue lowering prices,
+	one company will gain more customers while the other loses them,
+	so every day the agressive company will make more money 
+	even though they continually lower their gas price.
+	*/
 	fmt.Printf("\n\n")
 	fmt.Printf("Company %s is peaceful, Company %s lowers prices\n", peaceful, agressor)
 	fmt.Printf("-------------------------------------\n")
@@ -101,6 +115,74 @@ func PeaceWar(priceA float32, priceB float32, customersA float32, customersB flo
 			}else{
 				companyAPrice -= 0.01
 			}
+		}
+		if(companyBPrice < companyAPrice){
+			companyACustomers -= 1
+			companyBCustomers += 1
+		}
+		if(companyAPrice < companyBPrice){
+			companyACustomers += 1
+			companyBCustomers -= 1
+		}
+		companyAProfit += companyAPrice * companyACustomers
+		companyBProfit += companyBPrice * companyBCustomers
+		fmt.Printf("Company A gas price: $%.2f\n", companyAPrice)
+		fmt.Printf("Company B gas price: $%.2f\n", companyBPrice)
+		fmt.Printf("Company A customers: %.0f\n", companyACustomers)
+		fmt.Printf("Company B customers: %.0f\n", companyBCustomers)
+		fmt.Printf("Company A profit: $%.2f\n", companyAProfit)
+		fmt.Printf("Company B profit: $%.2f\n", companyBProfit)
+		fmt.Printf("----------------------------\n")
+	}
+	fmt.Printf("-------------------------------------\n")
+	fmt.Printf("Final Company A gas price: $%.2f\n", companyAPrice)
+	fmt.Printf("Final Company B gas price: $%.2f\n", companyBPrice)
+	fmt.Printf("Final Company A customers: %.0f\n", companyACustomers)
+	fmt.Printf("Final Company B customers: %.0f\n", companyBCustomers)
+	fmt.Printf("Final Company A profit: $%.2f\n", companyAProfit)
+	fmt.Printf("Final Company B profit: $%.2f\n", companyBProfit)
+	fmt.Printf("-------------------------------------\n")
+
+
+}
+
+
+
+func WarWar(priceA float32, priceB float32, customersA float32, customersB float32){
+
+	companyAPrice := priceA
+	companyBPrice := priceB
+	companyACustomers := customersA
+	companyBCustomers := customersB
+	companyAProfit := float32(0)
+	companyBProfit := float32(0)
+
+
+	/*
+	If both companies keep lowering their gas prices
+	they will both still make the same amount of money.
+	However, the amount of money is less than if they were to
+	just keep the gas prices the same.
+	*/
+
+	fmt.Printf("\n\n")
+	fmt.Printf("Both companies continue to lower gas prices\n")
+	fmt.Printf("-------------------------------------\n")
+
+
+	for i:=0; i < 5; i++{
+		fmt.Printf("Day %d\n", i+1)
+		fmt.Printf("----------------------------\n")
+		if(companyAPrice > 3.10){
+			companyAPrice -= 0.1
+		}else{
+			companyAPrice -= 0.01
+		}
+
+		if(companyBPrice > 3.10){
+			companyBPrice -= 0.1
+		}else{
+			companyBPrice -= 0.01
 		}
 		if(companyBPrice < companyAPrice){
 			companyACustomers -= 1
